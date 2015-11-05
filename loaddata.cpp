@@ -28,6 +28,7 @@ void loaddata(struct dbSysHead * head)
     }
     else{
         int size_per_record = sizeof(customer_rel);
+        cout<<size_per_record<<endl;
         char oneRec[size_per_record];
         string tmp;
         Buffer t(head);
@@ -58,24 +59,29 @@ void loaddata(struct dbSysHead * head)
         t.writeBuffer(head, t.data_, t.current_size_);
         
 //打印几个字符串检查一下
+        
         void * readcontent = malloc(60);
         rdFile(head, 1, 8, 64, readcontent);
         char *rec = (char *)readcontent;
         cout<<rec<<endl;
         
-        rdFile(head, 1, 136, 8, readcontent);
+        rdFile(head, 1, 472, 64, readcontent);
         rec = (char *)readcontent;
         cout<<rec<<endl;
         
         void * intcontent = malloc(8);
-        rdFile(head, 1, 0, 8, intcontent);
-        
-        //        long * readtoint = (long *)readint;
-        //        long readvalue = *readtoint;
-        
-        long readvalue = (long)intcontent;
-        cout<<readvalue<<endl;
-        rec = (char *)readcontent;
+        rdFile(head, 1, 464, 8, intcontent);
+        char *ltest = new char[4];
+        ltest = (char *)intcontent;
+        char* dd =new char[4];
+        for(int i=0;i<4;i++)
+        {
+            dd=&ltest[i];
+            dd++;	
+        }
+        long* tt =(long * )dd;
+        long ss = *tt;
+        cout<<ss<<endl;
          
         free(readcontent);
     }

@@ -6,7 +6,6 @@
 //  Copyright (c) 2015年 IreneWu. All rights reserved.
 //
 
-#include "Buffer.h"
 #include <iostream>
 #include <fstream>
 #include <string>
