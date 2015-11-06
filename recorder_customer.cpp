@@ -41,8 +41,6 @@ void readOneRecorder(char * ctmp, char * rec,int size_per_record){
      
     char b[8] = {((char*)&cus.nationkey)[0],((char*)&cus.nationkey)[1],((char*)&cus.nationkey)[2],((char*)&cus.nationkey)[3],((char*)&cus.custkey)[4],((char*)&cus.custkey)[5],((char*)&cus.custkey)[6],((char*)&cus.custkey)[7]};
     */
- //   char * a = (char*)malloc(8*sizeof(char));
- //   cout<<(cus.custkey&0xFF)<<endl;
     /*
     unsigned char a[8];
     a[0]=(cus.custkey>>56);
@@ -80,7 +78,6 @@ void readOneRecorder(char * ctmp, char * rec,int size_per_record){
     memcpy(recorder_tmp_+208, cus.acctbal, 64);
     memcpy(recorder_tmp_+272, cus.mktsegment, 64);
     memcpy(recorder_tmp_+336, cus.comment, 128);
-//    free(a);
     memcpy(rec, recorder_tmp_, size_per_record);
 
 }

@@ -59,7 +59,7 @@ void loaddata(struct dbSysHead * head)
         t.writeBuffer(head, t.data_, t.current_size_);
         
 //打印几个字符串检查一下
-        
+/*
         void * readcontent = malloc(60);
         rdFile(head, 1, 8, 64, readcontent);
         char *rec = (char *)readcontent;
@@ -84,8 +84,7 @@ void loaddata(struct dbSysHead * head)
         cout<<ss<<endl;
          
         free(readcontent);
+*/
     }
-
-
 }
 

@@ -5,7 +5,9 @@
 #include<string.h>
 #include"dbHead.h"
 #include "loaddata.h"
-
+#include "cursor.h"
+#include "recorder_customer.h"
+#include "getaRecordbyCursor.h"
 
 int init_database(struct dbSysHead *head)
 {
@@ -66,6 +68,14 @@ int main()
 	recyFileSpace(&head, fid2);
 	showFileDesc(&head);
 */
+    
+    //test cursor.cpp
+    RecordCursor scan(&head, 1, 464);
+    char * oneRec = (char *)malloc(sizeof(char)*464);
+    customer_rel cus_tmp;
+    while (scan.getNextRecord(oneRec)) {
+        cus_tmp = getaRecord(oneRec);
+    }
 	exit_database(&head);
 	system("pause");
 	return 0;
