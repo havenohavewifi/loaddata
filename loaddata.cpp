@@ -28,7 +28,7 @@ void loaddata(struct dbSysHead * head)
     }
     else{
         int size_per_record = sizeof(customer_rel);
-        cout<<size_per_record<<endl;
+//        cout<<size_per_record<<endl;
         char oneRec[size_per_record];
         string tmp;
         Buffer t(head);

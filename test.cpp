@@ -75,6 +75,7 @@ int main()
     customer_rel cus_tmp;
     while (scan.getNextRecord(oneRec)) {
         cus_tmp = getaRecord(oneRec);
+        cout<<cus_tmp.custkey<<":"<<cus_tmp.comment<<endl;
     }
 	exit_database(&head);
 	system("pause");
