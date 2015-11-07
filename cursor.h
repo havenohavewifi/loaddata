@@ -42,6 +42,7 @@ public:
         this->fid = fid;
         this->recordLength = recordLength;
         this->cLogicPage = -1;
+        this->cPhysicalPage = -1;
         this->cBufferPage = 0;
         this->bufferOffset = 0;
         this->start = true;
@@ -49,16 +50,20 @@ public:
     }
     
     bool getNextRecord(void *des);
+    long getcLogicLocation();
+    long getcLogicPage();
+    long getcBufferOffset();
     
 private:
-    struct dbSysHead *head;
-    long fid;
-    long cLogicPage;
-    long filePageNum;
-    long cBufferPage;
-    long bufferOffset;
-    long recordLength;
-    bool start;
+    struct dbSysHead *head;     //
+    long fid;                 // table ID
+    long cLogicPage;          // current logical page ID in the table
+    long filePageNum;         // the total number of pages in the table
+    long cBufferPage;         // the current page in the buffer
+    long bufferOffset;        // the current offset in the page
+    long recordLength;        // record length
+    bool start;               // is the first record
+
 };
 
 

@@ -46,6 +46,18 @@ bool RecordCursor::getNextRecord(void *des) {
     return true;
 }
 
+long RecordCursor::getcLogicLocation() {
+    return this->cLogicPage*SIZE_PER_PAGE+this->bufferOffset;
+}
+
+long RecordCursor::getcLogicPage() {
+    return this->cLogicPage;
+}
+
+long RecordCursor::getcBufferOffset() {
+    return this->cBufferPage;
+}
+
 
 
 // int getNextPage(struct dbSysHead *head, long fid, long num) {
