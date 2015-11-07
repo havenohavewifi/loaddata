@@ -4,10 +4,8 @@
 #include<time.h>
 #include<string.h>
 #include"dbHead.h"
-#include "loaddata.h"
-#include "cursor.h"
-#include "recorder_customer.h"
-#include "getaRecordbyCursor.h"
+
+
 
 int init_database(struct dbSysHead *head)
 {
@@ -35,22 +33,17 @@ int main()
 	*/
 	init_database(&head);
 	showDesc(&head);
-    
-/*
+	
 	printf("create file1...\n");
-    fid1 = creatFileSpace(&head);//为文件一分配空间
+	fid1 = creatFileSpace(&head);//为文件一分配空间
 	showFileDesc(&head);
-	printf("extend 10 pages for file1...\n");
+/*	printf("extend 10 pages for file1...\n");
 	extendFileSpace(&head, fid1, 10);//扩展十页
 	showFileDesc(&head);
-*/
- //	printf("extend 10 pages for file1...\n");
-//	extendFileSpace(&head, fid1, 10);//再扩展十页
-//	showFileDesc(&head);
+	printf("extend 10 pages for file1...\n");
+	extendFileSpace(&head, fid1, 10);//再扩展十页
+	showFileDesc(&head);
 
-    loaddata(&head);
-    
-/*
 	printf("create file2...\n");
 	fid2 = creatFileSpace(&head);
 	showFileDesc(&head);
@@ -66,17 +59,12 @@ int main()
 	showFileDesc(&head);
 	printf("delete file2...\n");
 	recyFileSpace(&head, fid2);
-	showFileDesc(&head);
-*/
-    
-    //test cursor.cpp
-    RecordCursor scan(&head, 1, 464);
-    char * oneRec = (char *)malloc(sizeof(char)*464);
-    customer_rel cus_tmp;
-    while (scan.getNextRecord(oneRec)) {
-        cus_tmp = getaRecord(oneRec);
-        cout<<cus_tmp.custkey<<":"<<cus_tmp.comment<<endl;
-    }
+	showFileDesc(&head);*/
+
+	if(initTable(&head, fid1) == 0)
+		printf("1\n");
+	if(showTable(&head, "customer") == -1 )
+		printf("2\n");
 	exit_database(&head);
 	system("pause");
 	return 0;

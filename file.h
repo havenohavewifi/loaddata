@@ -1,8 +1,6 @@
-#ifndef FILE_H
-#define FILE_H
 
 // 数据库最多容纳量192M
-#define SIZE_DATA_SPACE (2*1024*1024)
+#define SIZE_DATA_SPACE (192*1024*1024)
 // 每页大小4K
 #define SIZE_PER_PAGE (4*1024)
 // BitMap为二进制串，每一位代表对应页是否为空
@@ -19,9 +17,9 @@
 #define SEGMENT_ADDR (BITMAP_ADDR+SIZE_BIT_MAP+SIZE_DATA_SPACE)
 
 // 每个段的固定页面数
-#define PAGE_PER_SEGMENT 24
+#define PAGE_PER_SEGMENT 28
 // 最大存储的表个数
-#define MAX_FILE_NUM 8
+#define MAX_FILE_NUM 64
 // 第一个表的编号，从1开始
 #define FIRST_FID	1
 
@@ -36,13 +34,35 @@
 #define P_UNEDIT	0
 #define ALLO_FAIL	-1
 
-struct Segment 
+#define NAMELENGTH  32
+#define ATTRIBUTENUM  10
+
+struct Segment
 {
 	long fid;					//	该Segment属于哪个文件，即每段只属于一个表（存在较大空间浪费）
 	long count;					//	该Segment中记录了多少个页
 	long nextAddr;				//	下一个Segment的指针
 	long preAddr;				//	前一个Segment的指针
 	long pageNo[PAGE_PER_SEGMENT];	//	记录每一个页的页号
+};
+
+struct attributeDefine
+{
+	char attributeName[NAMELENGTH];//属性名
+	int type;//整型、字符型、日期型
+	int length;//属性长度
+	int recordDeviation;//记录内偏移
+};
+
+struct relationDefine
+{
+	long fileID;//文件标识
+	char relationName[NAMELENGTH];//关系名
+	char constructor[NAMELENGTH];//建立者
+	int attributeNum;//属性个数
+	int recordLength;//记录长度
+	int recordNum;//记录总数
+	struct attributeDefine attribute[ATTRIBUTENUM];//属性定义表
 };
 
 struct FileDesc
@@ -70,11 +90,12 @@ struct SysDesc
 	long curfid;				//	目前可以分配的fid号
 	long curFileNum;			//	目前有多少个文件，最多为 MAX_FILE_NUM
 	struct FileDesc fileDesc[MAX_FILE_NUM];			//	对每一个文件进行描述
+	struct relationDefine redef[MAX_FILE_NUM];		//  每一个表的关系定义
 };
 
 struct buffMap
 {
-    long pageNo;					//	该缓冲区块中存储的数据文件的页号
+	long pageNo;					//	该缓冲区块中存储的数据文件的页号
 	long loadTime;					//	读入缓冲区的时间
 	long vstTime;					//	访问该缓冲区块的时间
 	int edit;						//	该缓冲区块中的数据是否被修改
@@ -82,13 +103,18 @@ struct buffMap
 
 struct buffSpace
 {
-	 /*
-		应该动态分配缓冲区数据的空间
-		因为这样静态分配能分配到的空间太小
+	/*
+	应该动态分配缓冲区数据的空间
+	因为这样静态分配能分配到的空间太小
 	*/
 	char data[SIZE_BUFF][SIZE_PER_PAGE];	//	缓冲区数据块，目前设置SIZE_BUFF块，每一块的大小为页的大小	
 	struct buffMap map[SIZE_BUFF];			//	记录每一个缓冲区块的信息
 	long curTimeStamp;						//	目前的相对时间戳
 };
 
-#endif
+typedef struct
+{
+	int year;
+	int month;
+	int day;
+} date;//日期型
