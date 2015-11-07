@@ -7,3 +7,7 @@ loaddata.h loaddata.cpp 是把customer.tbl解析并写入file的方法
 注意 
 customer.tbl dbms.dat的文件路径需要修改
 fileID是从1开始编号
+
+Attention!!!
+load data struction should be delete,
+and any insertion or load record should be in reference to data dictionary
