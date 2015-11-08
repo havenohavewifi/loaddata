@@ -27,3 +27,5 @@ void getOneRecord(char *oneRec, relationDefine dic){
         }
     }
 }
+
+

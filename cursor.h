@@ -49,7 +49,7 @@ public:
         this->filePageNum = head->desc.fileDesc[idx].filePageNum;
         cout<<idx<<":"<<this->filePageNum<<endl;
     }
-    
+
     bool getNextRecord(void *des);
     long getcLogicLocation();
     long getcLogicPage();

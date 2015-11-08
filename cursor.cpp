@@ -27,7 +27,7 @@ using namespace std;
 bool RecordCursor::getNextRecord(void *des) {
     // all the data is read
     if(this->cLogicPage >= this->filePageNum) {
-        cout<<this->cLogicPage<<"-" <<this->bufferOffset<<endl;
+//        cout<<this->cLogicPage<<"-" <<this->bufferOffset<<endl;
         return false;
     }
     // if the next record is out of the buffer page

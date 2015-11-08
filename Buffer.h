@@ -21,7 +21,7 @@ public:
         std::cout<<"free Buffer"<<std::endl;
     };
     //initialize with data_ NULL
-    Buffer(struct dbSysHead * head);
+    Buffer(struct dbSysHead * head, int fid);
     //append one record per time
     bool AppendBuffer(const void * new_data, int new_size);
     //write one page to file(write from buffer to the disk)

@@ -31,9 +31,10 @@ void loaddata(struct dbSysHead * head)
     else{
         relationDefine dic = (*head).desc.redef[0];
         int size_per_record = dic.recordLength;
+        int file_id_ = 1;
         char *oneRec = (char *)malloc(sizeof(char)*size_per_record);
         string tmp;
-        Buffer t(head);
+        Buffer t(head, file_id_);
         int k=0;
         //get one line from customer.tbl
         while (getline(infile,tmp)) {
@@ -57,6 +58,8 @@ void loaddata(struct dbSysHead * head)
         }
         //write remainder
         t.writeBuffer(head, t.data_, t.current_size_);
+//        head->desc.fileDesc[file_id_]
+        free(oneRec);
         
 //打印几个字符串检查一下
 /*

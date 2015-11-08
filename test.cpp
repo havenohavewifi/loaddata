@@ -37,7 +37,7 @@ int main()
 	
 //	printf("create file1...\n");
 //	fid1 = creatFileSpace(&head);//为文件一分配空间
-	showFileDesc(&head);
+//	showFileDesc(&head);
 /*	printf("extend 10 pages for file1...\n");
 	extendFileSpace(&head, fid1, 10);//扩展十页
 	showFileDesc(&head);

@@ -13,8 +13,7 @@
 #include "dbHead.h"
 #include "Buffer.h"
 
-Buffer:: Buffer(struct dbSysHead * head):filehead(head), current_size_(0),max_size_(SIZE_PER_PAGE){
-    fileID = 1;
+Buffer:: Buffer(struct dbSysHead * head, int fID):filehead(head), fileID(fID),current_size_(0),max_size_(SIZE_PER_PAGE){
     pageID = 0;
     data_ = (char *)malloc(max_size_);
     pointer_ = data_;;
