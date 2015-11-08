@@ -85,7 +85,7 @@ bool createIndexOn(struct dbSysHead *head, long fid, char* column){
 		offset = (head->desc).redef[idx].attribute[i].recordDeviation;
 		key = *((int *)(one_Row_ + offset));
 		location = scanTable.getcLogicLocation();
-		
+		printf("key::%d, location::%d\n",key,location);
 		elem_insert.key = key;
 		elem_insert.pos = location;
 		//将一个记录对应的elem写入索引文件
@@ -93,10 +93,11 @@ bool createIndexOn(struct dbSysHead *head, long fid, char* column){
 		scanPointer ++;
         display(fp);
 		printf("\n");
-		if(scanPointer > 6)//暂时只建立30条索引
+		if(scanPointer > 30)//暂时只建立30条索引
 			break;
             //getOneRecord(one_Row_, (head->desc).redef[idx]); //get each attribute value and print
     }
+	
 	printf("inserted %d records.\n",scanPointer-1);
 	//test
 /*

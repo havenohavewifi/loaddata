@@ -21,7 +21,7 @@ extern "C" {
 #include "recorder_char_general.h"
 
 using namespace std;
-string src="C:\\Users\\admin\\Desktop\\loaddata\\loaddata\\customer.tbl";
+string src="C:\\Users\\admin\\Desktop\\customer.tbl";
 
 void loaddata(struct dbSysHead * head)
 {

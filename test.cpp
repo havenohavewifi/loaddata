@@ -83,9 +83,10 @@ int main()
     }
     showFileDesc(&head);
 	exit_database(&head);
-
+	printf("recordNum:%d\n",head.desc.redef[dictID].recordNum);
 	if(true == createIndexOn(&head, 1, "custkey")){
 		char* index_filename= "b_plus_tree_index_1custkey.dat";
+		
 		FILE* fp = fopen(index_filename,"rb+");
 		printf("search(fp,-10):%d\n",search(fp,-10));
 		printf("search(fp,1):%d\n",search(fp,1));
