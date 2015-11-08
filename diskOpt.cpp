@@ -129,16 +129,22 @@ int initAttribute(struct dbSysHead *head, long fid, char *name, int type, int le
 	if (pos == 0)
 	{
 		(head->desc).redef[n].attribute[pos].recordDeviation = 0;
+		switch ((head->desc).redef[n].attribute[pos].type)
+		{
+		case 1:(head->desc).redef[n].recordLength += sizeof(int);  break;
+		case 2:(head->desc).redef[n].recordLength += length*sizeof(char); break;
+		case 3:(head->desc).redef[n].recordLength += sizeof(date); break;
+		}
 	}
 	else
 	{
-		switch ((head->desc).redef[n].attribute[pos-1].type)
+		switch ((head->desc).redef[n].attribute[pos].type)
 		{
-		case 1:(head->desc).redef[n].attribute[pos].recordDeviation = (head->desc).redef[n].attribute[pos-1].recordDeviation + sizeof(int);
+		case 1:(head->desc).redef[n].attribute[pos].recordDeviation = (head->desc).redef[n].recordLength;
 			(head->desc).redef[n].recordLength += sizeof(int);  break;
-		case 2:(head->desc).redef[n].attribute[pos].recordDeviation = (head->desc).redef[n].attribute[pos-1].recordDeviation + length * sizeof(char);
+		case 2:(head->desc).redef[n].attribute[pos].recordDeviation = (head->desc).redef[n].recordLength;
 			(head->desc).redef[n].recordLength += length*sizeof(char); break;
-		case 3:(head->desc).redef[n].attribute[pos].recordDeviation = (head->desc).redef[n].attribute[pos-1].recordDeviation + sizeof(date);
+		case 3:(head->desc).redef[n].attribute[pos].recordDeviation = (head->desc).redef[n].recordLength;
 			(head->desc).redef[n].recordLength += sizeof(date); break;
 		}	
 	}
