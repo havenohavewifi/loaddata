@@ -7,4 +7,4 @@
 #define PAGE_BOUND	5
 
 
-int isAvail(void *p,char *funcName,char TYPE);
+int isAvail(void *p,char *funcName,int type);
