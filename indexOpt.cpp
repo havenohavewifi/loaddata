@@ -23,9 +23,7 @@
  * @date 2015/11/8
  **/
 bool createIndexOn(struct dbSysHead *head, long fid, char* column){
-	//check
 	printf("create index on %s....\n",column);
-
 	int idx;
 	char* index_filename;
 	char* indexname = "b_plus_tree_index_";
@@ -93,12 +91,13 @@ bool createIndexOn(struct dbSysHead *head, long fid, char* column){
 		//将一个记录对应的elem写入索引文件
 		insert(fp, elem_insert);
 		scanPointer ++;
-        
-		if(scanPointer > 30)
+        display(fp);
+		printf("\n");
+		if(scanPointer > 6)//暂时只建立30条索引
 			break;
             //getOneRecord(one_Row_, (head->desc).redef[idx]); //get each attribute value and print
     }
-	printf("inserted %d records.\n",scanPointer);
+	printf("inserted %d records.\n",scanPointer-1);
 	//test
 /*
 	printf("search(fp,-10):%d\n",search(fp,-10));

@@ -23,17 +23,21 @@ typedef struct
 	int parent;
 }Node;
 
+
+void displayElement(Element element);
+void displayNode(FILE *index,Node &node);
+void display(FILE *index);
 void getRoot(FILE *index, Node &node);
 int search(FILE *index, int key);
 void searchNode(FILE *index, Node &node, int key);
-int searchRecord(Node &node, int key);
-int insert(FILE *index, Element elem);
-int insertRecord(FILE *index, Node &node, Element elem);
-void splitNode(FILE *index, Node &nodea, Element elem, int pos);
+int searchElement(Node &node, int key);
+int insert(FILE *index, Element element);
+int insertElement(FILE *index, Node &node, Element element);
+void splitNode(FILE *index, Node &nodea, Element element, int pos);
 void enlargeKey(FILE *index, Node &node);
 int del(FILE *index, int key);
-int delRecord(FILE *index, Node &node, int key);
-void transRecord(FILE *index, Node &left, Node &right, int dir, int pos);
+int delElement(FILE *index, Node &node, int key);
+void transElement(FILE *index, Node &left, Node &right, int dir, int pos);
 void mergeNode(FILE *index, Node &left, Node &right);
 void ensmallKey(FILE *index, Node &nod);
 void changeParent(FILE *index, Node &node, int child, int parent);

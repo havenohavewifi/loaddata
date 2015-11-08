@@ -1,4 +1,3 @@
-
 #include"b_plus_tree.h"
 #include<stdio.h>
 
@@ -29,14 +28,14 @@ int search(FILE *index, int key)
 	int pos;
 	getRoot(index, node);
 	searchNode(index, node, key);
-	pos = searchRecord(node, key);
+	pos = searchElement(node, key);
 	if(pos == node.count || node.pair[pos].key != key)
 		return -1;
 	else
 		return node.pair[pos].pos;
 }
 
-int searchRecord(Node &node, int key)
+int searchElement(Node &node, int key)
 {
 	int i;
 	for(i = 0; i < node.count && key > node.pair[i].key; i ++);
@@ -50,7 +49,7 @@ void searchNode(FILE *index, Node &node, int key)
 		return;
 	else
 	{
-		pos = searchRecord(node, key);
+		pos = searchElement(node, key);
 		pos = pos == node.count ? pos - 1 : pos;
 		offset = node.pair[pos].pos;
 		fseek(index, offset, SEEK_SET);
@@ -59,11 +58,11 @@ void searchNode(FILE *index, Node &node, int key)
 	}
 }
 
-int insertRecord(FILE *index, Node &node, Element elem)
+int insertElement(FILE *index, Node &node, Element element)
 {
 	int pos, cur;
-	pos = searchRecord(node, elem.key);
-	if(pos == node.count || node.pair[pos].key != elem.key)
+	pos = searchElement(node, element.key);
+	if(pos == node.count || node.pair[pos].key != element.key)
 	{
 		if(node.count < MAX)
 		{
@@ -71,7 +70,7 @@ int insertRecord(FILE *index, Node &node, Element elem)
 			{
 				node.pair[cur] = node.pair[cur - 1];
 			}
-			node.pair[pos] = elem;
+			node.pair[pos] = element;
 			node.count ++;
 			fseek(index, -(int)sizeof(node), SEEK_CUR);
 			fwrite(&node, 1, sizeof(node), index);
@@ -82,17 +81,17 @@ int insertRecord(FILE *index, Node &node, Element elem)
 			}
 		}
 		else
-			splitNode(index, node, elem, pos);
+			splitNode(index, node, element, pos);
 		return 0;
 	}
 	else
 		return -1;
 }
 
-void splitNode(FILE *index, Node &nodea, Element elem, int pos)
+void splitNode(FILE *index, Node &nodea, Element element, int pos)
 {
 	Node nodeb, top;
-	Element elema, elemb;
+	Element elementa, elementb;
 	int cur;
 	nodeb.type = nodea.type;
 	nodeb.parent = nodea.parent;
@@ -104,20 +103,20 @@ void splitNode(FILE *index, Node &nodea, Element elem, int pos)
 	{
 		for(; cur > pos; cur --)
 			nodea.pair[cur] = nodea.pair[cur - 1];
-		nodea.pair[pos] = elem;
+		nodea.pair[pos] = element;
 	}
 	else
 	{
-		nodeb.pair[pos - nodea.count] = elem;
+		nodeb.pair[pos - nodea.count] = element;
 		for(cur --; cur >= nodea.count; cur --)
 			nodeb.pair[cur - nodea.count] = nodea.pair[cur];
 	}
 	fseek(index, -(int)sizeof(nodea), SEEK_CUR);
-	elema.key = nodea.pair[nodea.count - 1].key;
-	elema.pos = ftell(index);
+	elementa.key = nodea.pair[nodea.count - 1].key;
+	elementa.pos = ftell(index);
 	fseek(index, 0, SEEK_END);
-	elemb.key = nodeb.pair[nodeb.count - 1].key;
-	elemb.pos = ftell(index);
+	elementb.key = nodeb.pair[nodeb.count - 1].key;
+	elementb.pos = ftell(index);
 	fwrite(&nodeb, 1, sizeof(nodeb), index);
 	fflush(index);
 	if(nodea.parent == 0)
@@ -129,50 +128,50 @@ void splitNode(FILE *index, Node &nodea, Element elem, int pos)
 		cur = ftell(index);
 		nodea.parent = cur;
 		nodeb.parent = cur;
-		fseek(index, elema.pos, SEEK_SET);
+		fseek(index, elementa.pos, SEEK_SET);
 		fwrite(&nodea, 1, sizeof(nodea), index);
 		fflush(index);
-		fseek(index, elemb.pos, SEEK_SET);
+		fseek(index, elementb.pos, SEEK_SET);
 		fwrite(&nodeb, 1, sizeof(nodeb), index);
 		fflush(index);
 		fseek(index, sizeof(top), SEEK_CUR);
-		insertRecord(index, top, elema);
-		insertRecord(index, top, elemb);
+		insertElement(index, top, elementa);
+		insertElement(index, top, elementb);
 		rewind(index);
 		fwrite(&cur, 1, sizeof(cur), index);
 		fflush(index);
 	}
 	else
 	{
-		fseek(index, elema.pos, SEEK_SET);
+		fseek(index, elementa.pos, SEEK_SET);
 		fwrite(&nodea, 1, sizeof(nodea), index);
 		fflush(index);
-		fseek(index, elemb.pos, SEEK_SET);
+		fseek(index, elementb.pos, SEEK_SET);
 		fwrite(&nodeb, 1, sizeof(nodeb), index);
 		fflush(index);
 		fseek(index, nodea.parent, SEEK_SET);
 		fread(&top, 1, sizeof(top), index);
-		cur = searchRecord(top, elemb.key);
+		cur = searchElement(top, elementb.key);
 		if(cur == top.count)
 			cur --;
-		top.pair[cur] = elema;
-		insertRecord(index, top, elemb);
+		top.pair[cur] = elementa;
+		insertElement(index, top, elementb);
 	}
 	
 	if(nodeb.type == NODE)
 	{
 		Node node;
 		for(cur = 0; cur < nodeb.count; cur ++)
-			changeParent(index, node, nodeb.pair[cur].pos, elemb.pos);
+			changeParent(index, node, nodeb.pair[cur].pos, elementb.pos);
 	}
 }
 
-int insert(FILE *index, Element elem)
+int insert(FILE *index, Element element)
 {
 	Node node;
 	getRoot(index, node);
-	searchNode(index, node, elem.key);
-	return insertRecord(index, node, elem);
+	searchNode(index, node, element.key);
+	return insertElement(index, node, element);
 }
 
 void enlargeKey(FILE *index, Node &node)
@@ -199,15 +198,15 @@ int del(FILE *index, int key)
 	Node node;
 	getRoot(index, node);
 	searchNode(index, node, key);
-	return delRecord(index, node, key);
+	return delElement(index, node, key);
 }
 
-int delRecord(FILE *index, Node &node, int key)
+int delElement(FILE *index, Node &node, int key)
 {
 	Node left, right, top;
 	Element recol, recor, recot, recon;
 	int pos, tpos;
-	pos = searchRecord(node, key);
+	pos = searchElement(node, key);
 	if(pos == node.count)
 		return -1;
 	else if(node.parent == 0 || node.count > MIN)
@@ -243,7 +242,7 @@ int delRecord(FILE *index, Node &node, int key)
 		fseek(index, recot.pos, SEEK_SET);
 		fread(&top, 1, sizeof(top), index);
 		recot.key = top.pair[top.count - 1].key;
-		tpos = searchRecord(top, key);
+		tpos = searchElement(top, key);
 		if(tpos == top.count - 1)
 		{
 			recol = top.pair[tpos - 1];
@@ -251,7 +250,7 @@ int delRecord(FILE *index, Node &node, int key)
 			fread(&left, 1, sizeof(left), index);
 			if(left.count > MIN)
 			{
-				transRecord(index, left, node, RIGHT, pos);
+				transElement(index, left, node, RIGHT, pos);
 				if(node.type == NODE)
 					changeParent(index, right, node.pair[0].pos, recon.pos);
 				recon.key = node.pair[node.count - 1].key;
@@ -290,7 +289,7 @@ int delRecord(FILE *index, Node &node, int key)
 				fseek(index, recot.pos, SEEK_SET);
 				fwrite(&top, 1, sizeof(top), index);
 				fflush(index);
-				delRecord(index, top, recol.key);
+				delElement(index, top, recol.key);
 			}
 			if(top.parent != 0 && top.count != 0)
 				ensmallKey(index, top);
@@ -302,7 +301,7 @@ int delRecord(FILE *index, Node &node, int key)
 			fread(&right, 1, sizeof(right), index);
 			if(right.count > MIN)
 			{
-				transRecord(index, node, right, LEFT, pos);
+				transElement(index, node, right, LEFT, pos);
 				if(node.type == NODE)
 					changeParent(index, left, node.pair[node.count - 1].pos, recon.pos);
 				recon.key = node.pair[node.count - 1].key;
@@ -324,7 +323,7 @@ int delRecord(FILE *index, Node &node, int key)
 				fread(&left, 1, sizeof(left), index);
 				if(left.count > MIN)
 				{
-					transRecord(index, left, node, RIGHT, pos);
+					transElement(index, left, node, RIGHT, pos);
 					if(node.type == NODE)
 						changeParent(index, right, node.pair[0].pos, recon.pos);
 					recon.key = node.pair[node.count - 1].key;
@@ -362,7 +361,7 @@ int delRecord(FILE *index, Node &node, int key)
 					fseek(index, recot.pos, SEEK_SET);
 					fwrite(&top, 1, sizeof(top), index);
 					fflush(index);
-					delRecord(index, top, recon.key);
+					delElement(index, top, recon.key);
 				}
 			}
 			else
@@ -386,14 +385,14 @@ int delRecord(FILE *index, Node &node, int key)
 					fseek(index, recot.pos, SEEK_SET);
 					fwrite(&top, 1, sizeof(top), index);
 					fflush(index);
-					delRecord(index, top, recon.key);
+					delElement(index, top, recon.key);
 			}
 		}
 		return 0;
 	}
 }
 
-void transRecord(FILE *index, Node &left, Node &right, int dir, int pos)
+void transElement(FILE *index, Node &left, Node &right, int dir, int pos)
 {
 	if(dir == RIGHT)
 	{
@@ -437,7 +436,7 @@ void ensmallKey(FILE *index, Node &node)
 	key = node.pair[node.count - 1].key;
 	fseek(index, node.parent, SEEK_SET);
 	fread(&node, 1, sizeof(node), index);
-	pos = searchRecord(node, key);
+	pos = searchElement(node, key);
 	if(node.pair[pos].key != key)
 	{
 		node.pair[pos].key = key;
@@ -449,3 +448,42 @@ void ensmallKey(FILE *index, Node &node)
 	}
 }
 
+void displayElement(Element element){
+	//printf("the key is %d, the value is %d\n",element.key,element.pos);
+	printf("%d ",element.key);
+}
+
+void displayNode(FILE *index,Node &node){
+	long offset=0;
+	if(node.type==LEAF){
+		long num=ftell(index)-sizeof(Node);
+		printf("the node is %ld, this node is leaf. the node_count is %d. the parent is %d \n ",num,node.count,node.parent);
+		printf("this node's key is: ");
+		for(int i=0;i<node.count;i++){
+			displayElement(node.pair[i]);
+		}
+		printf("\n");
+	}else{
+		long num=ftell(index)-sizeof(Node);
+		printf("the node is %ld.this node is not leaf. the node_count is %d. the parent is %d \n ",num,node.count,node.parent);
+		printf("this node's key is: ");
+		for(int i=0;i<node.count;i++){
+			displayElement(node.pair[i]);
+			
+		}
+			printf("\n");
+		for(int i=0;i<node.count;i++){
+				offset=node.pair[i].pos;
+				fseek(index,offset,SEEK_SET);
+				Node node2;
+				fread(&node2,1,sizeof(node2),index);
+				displayNode(index,node2);
+		}
+	}
+}
+void display(FILE *index){
+	Node node;
+	getRoot(index,node);
+	displayNode(index,node);
+
+}
