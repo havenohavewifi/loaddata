@@ -23,6 +23,10 @@ typedef struct
 	int parent;
 }Node;
 
+
+void displayElement(Element element);
+void displayNode(FILE *index,Node &node);
+void display(FILE *index);
 void getRoot(FILE *index, Node &node);
 int search(FILE *index, int key);
 void searchNode(FILE *index, Node &node, int key);

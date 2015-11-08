@@ -449,3 +449,43 @@ void ensmallKey(FILE *index, Node &node)
 	}
 }
 
+void displayElement(Element element){
+	//printf("the key is %d, the value is %d\n",element.key,element.pos);
+	printf("%d ",element.key);
+}
+
+void displayNode(FILE *index,Node &node){
+	long offset=0;
+	if(node.type==LEAF){
+		long num=ftell(index)-sizeof(Node);
+		printf("the node is %ld, this node is leaf. the node_count is %d. the parent is %d \n ",num,node.count,node.parent);
+		printf("this node's key is: ");
+		for(int i=0;i<node.count;i++){
+			displayElement(node.pair[i]);
+		}
+		printf("\n");
+	}else{
+		long num=ftell(index)-sizeof(Node);
+		printf("the node is %ld.this node is not leaf. the node_count is %d. the parent is %d \n ",num,node.count,node.parent);
+		printf("this node's key is: ");
+		for(int i=0;i<node.count;i++){
+			displayElement(node.pair[i]);
+			
+		}
+			printf("\n");
+		for(int i=0;i<node.count;i++){
+				offset=node.pair[i].pos;
+				fseek(index,offset,SEEK_SET);
+				Node node2;
+				fread(&node2,1,sizeof(node2),index);
+				displayNode(index,node2);
+		}
+	}
+}
+void display(FILE *index){
+	Node node;
+	getRoot(index,node);
+	displayNode(index,node);
+
+}
+
