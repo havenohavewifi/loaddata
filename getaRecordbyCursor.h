@@ -11,5 +11,7 @@
 
 #include <stdio.h>
 #include "recorder_customer.h"
-customer_rel getaRecord( char *oneRec);
+#include "file.h"
+//according to datadictionary, analyze each attribute value, need to be rewritten to get a certain attriute value and modify the return type
+void getOneRecord(char *oneRec, relationDefine dic);
 #endif /* defined(__loaddata__getaRecordbyCursor__) */

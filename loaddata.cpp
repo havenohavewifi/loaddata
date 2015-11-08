@@ -13,6 +13,8 @@
 #include "Buffer.h"
 #include "dbHead.h"
 #include "recorder_customer.h"
+#include "file.h"
+#include "recorder_char_general.h"
 
 using namespace std;
 string src="/Users/irene/Desktop/customer.tbl";
@@ -27,21 +29,19 @@ void loaddata(struct dbSysHead * head)
         cout<<"open file failure"<<endl;
     }
     else{
-        int size_per_record = sizeof(customer_rel);
-//        cout<<size_per_record<<endl;
-        char oneRec[size_per_record];
+        relationDefine dic = (*head).desc.redef[0];
+        int size_per_record = dic.recordLength;
+        char *oneRec = (char *)malloc(sizeof(char)*size_per_record);
         string tmp;
         Buffer t(head);
         int k=0;
-        unsigned long len;
-        long pageNum = 0;
         //get one line from customer.tbl
         while (getline(infile,tmp)) {
             int tmp_len = tmp.length();
             char * oneRow = new char[tmp_len+1];
             memcpy(oneRow, tmp.c_str(), tmp_len);
             //split this line and get one recorder
-            readOneRecorder(oneRow, oneRec, size_per_record);
+            parserOneLineFromFile(oneRow, oneRec, dic);
             //if more than one page, write to file and reset Buffer t
             if(false == t.AppendBuffer(oneRec, size_per_record))
             {
@@ -53,36 +53,21 @@ void loaddata(struct dbSysHead * head)
                 t.current_size_ = size_per_record;
             }
             k++;
-            if(k>40) break;
+            if(k>300) break;
         }
         //write remainder
         t.writeBuffer(head, t.data_, t.current_size_);
         
 //打印几个字符串检查一下
 /*
-        void * readcontent = malloc(60);
-        rdFile(head, 1, 8, 64, readcontent);
+        void * readcontent = malloc(64);
+        rdFile(head, 1, 4, 64, readcontent);
         char *rec = (char *)readcontent;
         cout<<rec<<endl;
         
-        rdFile(head, 1, 472, 64, readcontent);
+        rdFile(head, 1, 460, 64, readcontent);
         rec = (char *)readcontent;
         cout<<rec<<endl;
-        
-        void * intcontent = malloc(8);
-        rdFile(head, 1, 464, 8, intcontent);
-        char *ltest = new char[4];
-        ltest = (char *)intcontent;
-        char* dd =new char[4];
-        for(int i=0;i<4;i++)
-        {
-            dd=&ltest[i];
-            dd++;	
-        }
-        long* tt =(long * )dd;
-        long ss = *tt;
-        cout<<ss<<endl;
-         
         free(readcontent);
 */
     }

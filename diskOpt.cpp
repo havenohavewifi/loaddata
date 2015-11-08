@@ -25,6 +25,7 @@ int showTable(struct dbSysHead *head, char* name)
 	{
 		if (strcmp(name, head->desc.redef[i].relationName) == 0)
 		{
+            printf("dic id: %d\n",i);
 			printf("TableName: %s\n", head->desc.redef[i].relationName);
 			printf("Constructor: %s\n", head->desc.redef[i].constructor);
 			printf("AttributeNum: %d\n", head->desc.redef[i].attributeNum);
@@ -32,6 +33,7 @@ int showTable(struct dbSysHead *head, char* name)
 			{
 				printf("%d:%s\n", j+1, head->desc.redef[i].attribute[j].attributeName);
 			}
+            printf("RecordLength: %d\n",head->desc.redef[i].recordLength);
 			return 0;
 		}
 	}
@@ -85,7 +87,7 @@ int changeRecordNum(struct dbSysHead *head, long fid, int num)
 {
 	int n;
 
-	if (n = queryFileID(head, fid) == -1)
+	if ((n = queryFileID(head, fid)) == -1)
 	{
 		printf("can't find file!\n");
 		return -1;
@@ -109,6 +111,7 @@ int changeRecordNum(struct dbSysHead *head, long fid, int num)
 **/
 int initAttribute(struct dbSysHead *head, long fid, char *name, int type, int length)
 {
+<<<<<<< Updated upstream
 	int n;
 	int pos;
 
@@ -150,8 +153,50 @@ int initAttribute(struct dbSysHead *head, long fid, char *name, int type, int le
 	}
 	(head->desc).redef[n].attributeNum++;
 	return 0;
+=======
+    int n;
+    int pos;
+    
+    if (n = queryFileID(head, fid) == -1)
+    {
+        printf("can't find file!\n");
+        return -1;
+    }
+    if ((head->desc).redef[n].attributeNum == ATTRIBUTENUM)
+    {
+        printf("too many attributes!\n");
+        return -1;
+    }
+    pos = (head->desc).redef[n].attributeNum;
+    strcpy((head->desc).redef[n].attribute[pos].attributeName, name);
+    (head->desc).redef[n].attribute[pos].type = type;
+    (head->desc).redef[n].attribute[pos].length = length;
+    if (pos == 0)
+    {
+        (head->desc).redef[n].attribute[pos].recordDeviation = 0;
+        switch ((head->desc).redef[n].attribute[pos].type)
+        {
+            case 1:(head->desc).redef[n].recordLength += sizeof(int);  break;
+            case 2:(head->desc).redef[n].recordLength += length*sizeof(char); break;
+            case 3:(head->desc).redef[n].recordLength += sizeof(date); break;
+        }
+    }
+    else
+    {
+        switch ((head->desc).redef[n].attribute[pos].type)
+        {
+            case 1:(head->desc).redef[n].attribute[pos].recordDeviation = (head->desc).redef[n].recordLength;
+                (head->desc).redef[n].recordLength += sizeof(int);  break;
+            case 2:(head->desc).redef[n].attribute[pos].recordDeviation = (head->desc).redef[n].recordLength;
+                (head->desc).redef[n].recordLength += length*sizeof(char); break;
+            case 3:(head->desc).redef[n].attribute[pos].recordDeviation = (head->desc).redef[n].recordLength;
+                (head->desc).redef[n].recordLength += sizeof(date); break;
+        }	
+    }
+    (head->desc).redef[n].attributeNum++;
+    return 0;
+>>>>>>> Stashed changes
 }
-
 /*
 * @brief 删除一个属性表
 *

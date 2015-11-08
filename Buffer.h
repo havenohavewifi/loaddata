@@ -10,12 +10,16 @@
 #define __loaddata__Buffer__
 
 #include <stdio.h>
+#include <iostream>
 #include "dbHead.h"
 
 class Buffer{
 public:
     Buffer(){};
-    ~Buffer(){};
+    ~Buffer(){
+        free(data_);
+        std::cout<<"free Buffer"<<std::endl;
+    };
     //initialize with data_ NULL
     Buffer(struct dbSysHead * head);
     //append one record per time

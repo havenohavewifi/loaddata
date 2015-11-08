@@ -1,8 +1,10 @@
+#ifndef DBHEAD_H_
+#define DBHEAD_H_
 
-#include"file.h"
-#include"err.h"
+#include "file.h"
+#include "err.h"
 
-#define DBMS_DAT "dbms.dat"
+#define DBMS_DAT "/Users/irene/Desktop/dbms.dat"
 
 struct dbSysHead
 {
@@ -73,3 +75,5 @@ int showBitMap(struct dbSysHead *head, long start, long end);
 
 //	update.cpp
 int sysUpdate(struct dbSysHead *head);
+
+#endif

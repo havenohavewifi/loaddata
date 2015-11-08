@@ -1,115 +1,140 @@
+#ifndef FILE_H_
+#define FILE_H_
 
-// ���ݿ����������192M
-#define SIZE_DATA_SPACE (192*1024*1024)
-// ÿҳ��С4K
+//  ˝æ›ø‚◊Ó∂‡»›ƒ…¡ø192M
+#define SIZE_DATA_SPACE (12*1024*1024)
+// √ø“≥¥Û–°4K
+
+// ¬†Àù√¶‚Ä∫√∏‚Äö‚óä√ì‚àÇ‚Ä°¬ª‚Ä∫∆í‚Ä¶¬°√∏192M
+#define SIZE_DATA_SPACE (2*1024*1024)
+// ‚àö√∏‚Äú‚â•¬•√õ‚Äì¬∞4K
+
 #define SIZE_PER_PAGE (4*1024)
-// BitMapΪ�����ƴ���ÿһλ������Ӧҳ�Ƿ�Ϊ��
+// BitMap≈í‚Ñ¢‚àÇÀõŒ©¬Ø√∑‚àÜ¬•√Ü¬£¬®‚àö√∏‚Äú¬™≈í¬™¬•Àô¬±√å‚àÇ‚Äò‚Äù¬∂‚Äú‚â•¬†¬´‚àë√í≈í‚Ñ¢√∏‚Äô
 #define SIZE_BIT_MAP  (SIZE_DATA_SPACE/(SIZE_PER_PAGE*8))
 
-// �������ݿ����һ���ļ�DBMS_DAT���У�����˳��Ϊ ??Ϊ��ʱ��û���õ���
+// ‚ÄôÀö‚àèÀÜ¬†Àù√¶‚Ä∫√∏‚Äö¬•√ä‚Äò‚ÅÑ‚Äú¬™‚àèÀÜ≈í∆í¬∫ÀõDBMS_DAT¬µ¬±√∑‚Äì¬£¬®‚Äú¬ø¬•≈í√Ä‚â•‚Äì√ö≈í‚Ñ¢ ??≈í‚Ñ¢‚Äò‚Ä∫¬†¬±¬™œÄ‚àö¬™‚Äù‚Äì‚Äù‚àö¬µŒ©¬µ∆í
 // (table description??, bitmap, data (pages), segment??)
 #define TABLE_DESC_ADDR 0
-// BitMap�ڴ洢�ļ��еĵ�ַ
+// BitMap‚Äò‚ÅÑ¬•√ä¬•¬¢≈í∆í¬∫Àõ√∑‚Äì¬µ∆í¬µ√ø√∑‚àë
 #define BITMAP_ADDR 1024 
-// ���ݶ��ڴ洢�ļ��еĵ�ַ
+// ¬†Àù√¶‚Ä∫‚àÇ≈í‚Äò‚ÅÑ¬•√ä¬•¬¢≈í∆í¬∫Àõ√∑‚Äì¬µ∆í¬µ√ø√∑‚àë
 #define DATA_ADDR	(BITMAP_ADDR+SIZE_BIT_MAP)
-// �����ļ����ƺ���û�г��֣�������
+// ‚àÜ‚Ä∞√ÄÀö≈í∆í¬∫Àõ√∑‚Äì√Ä‚àÜ‚à´ƒ±‚àÇ¬∫‚àö¬™‚Äù‚Äì‚â•ÀÜ≈ì√∑¬£¬®‚Äù‚Äì‚Äù‚àö¬¨Ô£ø¬£√∏
 #define SEGMENT_ADDR (BITMAP_ADDR+SIZE_BIT_MAP+SIZE_DATA_SPACE)
 
-// ÿ���εĹ̶�ҳ����
+
+// √ø∏ˆ∂ŒµƒπÃ∂®“≥√Ê ˝
 #define PAGE_PER_SEGMENT 28
-// ���洢�ı�����
+// ◊Ó¥Û¥Ê¥¢µƒ±Ì∏ˆ ˝
 #define MAX_FILE_NUM 64
-// ��һ�����ı�ţ���1��ʼ
+// µ⁄“ª∏ˆ±Ìµƒ±‡∫≈£¨¥”1ø™ º
+
+// ‚àö√∏‚àèÀÜ‚àÇ≈í¬µ∆íœÄ√É‚àÇ¬Æ‚Äú‚â•‚àö√ä¬†Àù
+#define PAGE_PER_SEGMENT 24
+// ‚óä√ì¬•√õ¬•√ä¬•¬¢¬µ∆í¬±√å‚àèÀÜ¬†Àù
+#define MAX_FILE_NUM 8
+// ¬µ‚ÅÑ‚Äú¬™‚àèÀÜ¬±√å¬µ∆í¬±‚Ä°‚à´‚âà¬£¬®¬•‚Äù1√∏‚Ñ¢¬†¬∫
+
 #define FIRST_FID	1
 
-// ����������ҳ�����
+// ¬™‚à´‚â•√Ç¬´¬Ø√ÄÀò‚à´¬®‚Äú‚â•‚àö√ä‚àèÀÜ¬†Àù
 #define SIZE_BUFF 32
-// Buffer�в����ڲ�ѯҳ��ʱ�ķ���ֵ
+// Buffer√∑‚Äì‚â§¬™¬•√ä‚Äò‚ÅÑ‚â§√à‚Äî√ò‚Äú‚â•‚àö√ä¬†¬±¬µ∆í‚àë¬µ¬™√ø√∑¬µ
 #define BUFF_NOT_HIT -1
-// ��ҳ�����������
+// ‚àÇ‚Äò‚Äú‚â•‚àö√ä‚â§≈∏‚óäÀú¬µ∆í‚àö√ã¬†ÀÜ
 #define P_AVAI		1
 #define P_UNAVAI	0
 #define P_EDIT		1
 #define P_UNEDIT	0
 #define ALLO_FAIL	-1
 
+
 #define NAMELENGTH  32
 #define ATTRIBUTENUM  10
 
+
 struct Segment
 {
-	long fid;					//	��Segment�����ĸ��ļ�����ÿ��ֻ����һ���������ڽϴ�ռ��˷ѣ�
-	long count;					//	��Segment�м�¼�˶��ٸ�ҳ
-	long nextAddr;				//	��һ��Segment��ָ��
-	long preAddr;				//	ǰһ��Segment��ָ��
-	long pageNo[PAGE_PER_SEGMENT];	//	��¼ÿһ��ҳ��ҳ��
+	long fid;					//	‚àè‚àöSegment¬†√ô‚Äù‚ÅÑ∆í∆í‚àèÀÜ≈í∆í¬∫Àõ¬£¬®¬∫¬•‚àö√∏‚àÇ≈í√∑¬™¬†√ô‚Äù‚ÅÑ‚Äú¬™‚àèÀÜ¬±√å¬£¬Æ¬•√ä‚Äò‚ÅÑŒ©≈ì¬•√õ√∏‚Äô¬∫‚Ä∞¬ø√Ä‚àë‚Äî¬£¬©
+	long count;					//	‚àè‚àöSegment√∑‚Äì¬∫¬´¬¨¬∫¬°√Ä‚àÇ‚Ä°‚Ä¶≈∏‚àèÀÜ‚Äú‚â•
+	long nextAddr;				//	≈ì¬¨‚Äú¬™‚àèÀÜSegment¬µ∆í√∑‚àè‚Äô√é
+	long preAddr;				//	¬´‚àû‚Äú¬™‚àèÀÜSegment¬µ∆í√∑‚àè‚Äô√é
+	long pageNo[PAGE_PER_SEGMENT];	//	¬∫¬´¬¨¬∫‚àö√∏‚Äú¬™‚àèÀÜ‚Äú‚â•¬µ∆í‚Äú‚â•‚à´‚âà
 };
 
 struct attributeDefine
 {
-	char attributeName[NAMELENGTH];//������
-	int type;//���͡��ַ��͡�������
-	int length;//���Գ���
-	int recordDeviation;//��¼��ƫ��
+    char attributeName[NAMELENGTH];//Â±ûÊÄßÂêç
+    int type;//Êï¥Âûã„ÄÅÂ≠óÁ¨¶Âûã„ÄÅÊó•ÊúüÂûã
+    int length;//Â±ûÊÄßÈïøÂ∫¶
+    int recordDeviation;//ËÆ∞ÂΩïÂÜÖÂÅèÁßª
 };
 
 struct relationDefine
 {
-	long fileID;//�ļ���ʶ
-	char relationName[NAMELENGTH];//��ϵ��
-	char constructor[NAMELENGTH];//������
-	int attributeNum;//���Ը���
-	int recordLength;//��¼����
-	int recordNum;//��¼����
-	struct attributeDefine attribute[ATTRIBUTENUM];//���Զ����
+    long fileID;//文件标识
+    char relationName[NAMELENGTH];//ÂÖ≥Á≥ªÂêç
+    char constructor[NAMELENGTH];//Âª∫Á´ãËÄÖ
+    int attributeNum;//Â±ûÊÄß‰∏™Êï∞
+    int recordLength;//ËÆ∞ÂΩïÈïøÂ∫¶
+    int recordNum;//ËÆ∞ÂΩïÊÄªÊï∞
+    struct attributeDefine attribute[ATTRIBUTENUM];//Â±ûÊÄßÂÆö‰πâÊåáÈíà
 };
+
 
 struct FileDesc
 {
-	long fileID;				//	�ļ��ı�ʶ
-	long fileAddr;				//	�ļ���Segment��ֵַ��Segment������������
-	long filePageNum;			//	�ļ�ռ�ö���ҳ
+    long fileID;				//	≈í∆í¬∫Àõ¬µ∆í¬±√ç¬†‚àÇ
+    long fileAddr;				//	≈í∆í¬∫Àõ¬µ∆íSegment¬µ√ø√∑‚àë√∑¬µ¬£¬ÆSegment‚Äù‚àö¬°¬•¬±√å¬•√Ü¬°¬®¬£¬©
+    long filePageNum;			//	≈í∆í¬∫Àõ‚Äô¬∫‚Äù‚àö‚àÇ‚Ä°‚Ä¶≈∏‚Äú‚â•
 };
 
 struct SysDesc
 {
-	long sizeOfFile;			//	�洢�ļ��У��������Ĵ�С��Ĭ����Ϊ196M
-	long sizePerPage;           //	ÿһ��ҳ�Ĵ�С
-	long totalPage;				//	�ܹ���ҳ��
-	long pageAvai;				//	��ǰ�ж��ٿ��õ�ҳ
+	long sizeOfFile;			//	¥Ê¥¢Œƒº˛÷–£¨ ˝æ›«¯µƒ¥Û–°£¨ƒ¨»œ…ËŒ™196M
+	long sizePerPage;           //	√ø“ª∏ˆ“≥µƒ¥Û–°
+	long totalPage;				//	◊‹π≤µƒ“≥ ˝
+	long pageAvai;				//	µ±«∞”–∂‡…Ÿø…”√µƒ“≥
 
-	long bitMapAddr;			//	bitMap�ڴ洢�ļ��еĵ�ַ
-	long sizeBitMap;			//	bitMap�Ĵ�С,���ֽ�Ϊ��λ
+	long bitMapAddr;			//	bitMap‘⁄¥Ê¥¢Œƒº˛÷–µƒµÿ÷∑
+	long sizeBitMap;			//	bitMapµƒ¥Û–°,“‘◊÷Ω⁄Œ™µ•Œª
 
-	long dataAddr;				//	�洢�ļ����������Ĵ�С
-	long segmentNum;			//	Segment������
-	long segmentAddr;			//	Segment�ڴ洢�ļ��ĵ�ַ
-	long segmentCur;			//	Ŀǰʹ�ù���Segment����
+	long dataAddr;				//	¥Ê¥¢Œƒº˛÷– ˝æ›«¯µƒ¥Û–°
+	long segmentNum;			//	Segmentµƒ ˝¡ø
+	long segmentAddr;			//	Segment‘⁄¥Ê¥¢Œƒº˛µƒµÿ÷∑
+	long segmentCur;			//	ƒø«∞ π”√π˝µƒSegment ˝¡ø
 
-	long curfid;				//	Ŀǰ���Է����fid��
-	long curFileNum;			//	Ŀǰ�ж��ٸ��ļ������Ϊ MAX_FILE_NUM
-	struct FileDesc fileDesc[MAX_FILE_NUM];			//	��ÿһ���ļ���������
-	struct relationDefine redef[MAX_FILE_NUM];		//  ÿһ�����Ĺ�ϵ����
+	long curfid;				//	ƒø«∞ø…“‘∑÷≈‰µƒfid∫≈
+	long curFileNum;			//	ƒø«∞”–∂‡…Ÿ∏ˆŒƒº˛£¨◊Ó∂‡Œ™ MAX_FILE_NUM
+	struct FileDesc fileDesc[MAX_FILE_NUM];			//	∂‘√ø“ª∏ˆŒƒº˛Ω¯––√Ë ˆ
+	struct relationDefine redef[MAX_FILE_NUM];		//  √ø“ª∏ˆ±Ìµƒπÿœµ∂®“Â
+
 };
 
 struct buffMap
 {
-	long pageNo;					//	�û��������д洢�������ļ���ҳ��
-	long loadTime;					//	���뻺������ʱ��
-	long vstTime;					//	���ʸû��������ʱ��
-	int edit;						//	�û��������е������Ƿ��޸�
+	long pageNo;					//	∏√ª∫≥Â«¯øÈ÷–¥Ê¥¢µƒ ˝æ›Œƒº˛µƒ“≥∫≈
+	long loadTime;					//	∂¡»Îª∫≥Â«¯µƒ ±º‰
+	long vstTime;					//	∑√Œ ∏√ª∫≥Â«¯øÈµƒ ±º‰
+	int edit;
+    
 };
 
 struct buffSpace
 {
 	/*
-	Ӧ�ö�̬���仺�������ݵĿռ�
-	��Ϊ������̬�����ܷ��䵽�Ŀռ�̫С
+	”¶∏√∂ØÃ¨∑÷≈‰ª∫≥Â«¯ ˝æ›µƒø’º‰
+	“ÚŒ™’‚—˘æ≤Ã¨∑÷≈‰ƒ‹∑÷≈‰µΩµƒø’º‰Ã´–°
+=======
+	 /*
+		‚Äù¬∂‚àè‚àö‚àÇ√ò√É¬®‚àë√∑‚âà‚Ä∞¬™‚à´‚â•√Ç¬´¬Ø¬†Àù√¶‚Ä∫¬µ∆í√∏‚Äô¬∫‚Ä∞
+		‚Äú√ö≈í‚Ñ¢‚Äô‚Äö‚ÄîÀò√¶‚â§√É¬®‚àë√∑‚âà‚Ä∞∆í‚Äπ‚àë√∑‚âà‚Ä∞¬µŒ©¬µ∆í√∏‚Äô¬∫‚Ä∞√É¬¥‚Äì¬∞
+>>>>>>> Stashed changes
 	*/
-	char data[SIZE_BUFF][SIZE_PER_PAGE];	//	���������ݿ飬Ŀǰ����SIZE_BUFF�飬ÿһ��Ĵ�СΪҳ�Ĵ�С	
-	struct buffMap map[SIZE_BUFF];			//	��¼ÿһ�������������Ϣ
-	long curTimeStamp;						//	Ŀǰ�����ʱ���
+	char data[SIZE_BUFF][SIZE_PER_PAGE];	//	¬™‚à´‚â•√Ç¬´¬Ø¬†Àù√¶‚Ä∫√∏√à¬£¬®∆í√∏¬´‚àû‚Ä¶√ã√∑‚àöSIZE_BUFF√∏√à¬£¬®‚àö√∏‚Äú¬™√∏√à¬µ∆í¬•√õ‚Äì¬∞≈í‚Ñ¢‚Äú‚â•¬µ∆í¬•√õ‚Äì¬∞	
+	struct buffMap map[SIZE_BUFF];			//	¬∫¬´¬¨¬∫‚àö√∏‚Äú¬™‚àèÀÜ¬™‚à´‚â•√Ç¬´¬Ø√∏√à¬µ∆í‚Äì‚âà≈ì¬¢
+	long curTimeStamp;						//	∆í√∏¬´‚àû¬µ∆í≈ì‚Ä°‚àÇ‚Äò¬†¬±¬∫‚Ä∞¬•¬°
 };
 
 typedef struct
@@ -117,4 +142,5 @@ typedef struct
 	int year;
 	int month;
 	int day;
-} date;//������
+} date;//»’∆⁄–Õ
+#endif

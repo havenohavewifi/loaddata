@@ -4,8 +4,9 @@
 #include<time.h>
 #include<string.h>
 #include"dbHead.h"
-
-
+#include "loaddata.h"
+#include "cursor.h"
+#include "getaRecordbyCursor.h"
 
 int init_database(struct dbSysHead *head)
 {
@@ -34,8 +35,8 @@ int main()
 	init_database(&head);
 	showDesc(&head);
 	
-	printf("create file1...\n");
-	fid1 = creatFileSpace(&head);//为文件一分配空间
+//	printf("create file1...\n");
+//	fid1 = creatFileSpace(&head);//为文件一分配空间
 	showFileDesc(&head);
 /*	printf("extend 10 pages for file1...\n");
 	extendFileSpace(&head, fid1, 10);//扩展十页
@@ -65,7 +66,22 @@ int main()
 		printf("1\n");
 	if(showTable(&head, "customer") == -1 )
 		printf("2\n");
+    //read customer.tbl and write into our file1
+    loaddata(&head);
+    //use dictID to scan file1
+    int dictID = 0;
+    int scanPointer = 0;
+    int rec_length = head.desc.redef[dictID].recordLength;
+    RecordCursor scanTable(&head, 1, rec_length);
+    char * one_Row_ = (char *)malloc(sizeof(char)*rec_length);
+    while (true == scanTable.getNextRecord(one_Row_)) { //only scan
+        scanPointer ++;
+        if(scanPointer > 292)
+            getOneRecord(one_Row_, head.desc.redef[dictID]); //get each attribute value and print
+    }
+    showFileDesc(&head);
 	exit_database(&head);
+        
 	system("pause");
 	return 0;
 }
