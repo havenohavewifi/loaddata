@@ -7,6 +7,7 @@
 #include "loaddata.h"
 #include "cursor.h"
 #include "getaRecordbyCursor.h"
+#include "b_plus_tree.h"
 
 int init_database(struct dbSysHead *head)
 {
@@ -36,7 +37,7 @@ int main()
 	showDesc(&head);
 	
 //	printf("create file1...\n");
-//	fid1 = creatFileSpace(&head);//为文件一分配空间
+	fid1 = creatFileSpace(&head);//为文件一分配空间
 //	showFileDesc(&head);
 /*	printf("extend 10 pages for file1...\n");
 	extendFileSpace(&head, fid1, 10);//扩展十页
@@ -72,6 +73,7 @@ int main()
     int dictID = 0;
     int scanPointer = 0;
     int rec_length = head.desc.redef[dictID].recordLength;
+	printf("attributeName::%s", head.desc.redef[dictID].attribute[0].attributeName);
     RecordCursor scanTable(&head, 1, rec_length);
     char * one_Row_ = (char *)malloc(sizeof(char)*rec_length);
     while (true == scanTable.getNextRecord(one_Row_)) { //only scan
@@ -81,7 +83,17 @@ int main()
     }
     showFileDesc(&head);
 	exit_database(&head);
-        
+
+	if(true == createIndexOn(&head, 1, "custkey")){
+		char* index_filename= "b_plus_tree_index_1custkey.dat";
+		FILE* fp = fopen(index_filename,"rb+");
+		printf("search(fp,-10):%d\n",search(fp,-10));
+		printf("search(fp,1):%d\n",search(fp,1));
+		printf("search(fp,2):%d\n",search(fp,2));
+		printf("search(fp,50):%d\n",search(fp,50));
+		fclose(fp);
+	}
+
 	system("pause");
 	return 0;
 }
