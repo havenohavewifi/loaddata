@@ -8,7 +8,6 @@
 
 #include "getaRecordbyCursor.h"
 #include "cursor.h"
-#include "recorder_customer.h"
 #include "file.h"
 
 void getOneRecord(char *oneRec, relationDefine dic){

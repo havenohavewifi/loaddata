@@ -4,7 +4,7 @@
 #include "file.h"
 #include "err.h"
 
-#define DBMS_DAT "/Users/irene/Desktop/dbms.dat"
+#define DBMS_DAT "C:\\Users\\admin\\Desktop\\dbms.dat"
 
 struct dbSysHead
 {
@@ -76,4 +76,9 @@ int showBitMap(struct dbSysHead *head, long start, long end);
 //	update.cpp
 int sysUpdate(struct dbSysHead *head);
 
+//indexOpt.cpp
+bool createIndexOn(struct dbSysHead *head, long fid, char* column);
+int deleteIndex(struct dbSysHead *head, long fid, char* column);
+int insertInIndex(struct dbSysHead *head, long fid, int key, int position);
+int deleteInIndex(struct dbSysHead *head, long fid, int key);
 #endif

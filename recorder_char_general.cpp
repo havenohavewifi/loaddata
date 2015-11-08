@@ -5,7 +5,13 @@
 //  Created by IreneWu on 15/11/7.
 //  Copyright (c) 2015年 IreneWu. All rights reserved.
 //
+extern "C" {
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "dbHead.h"
+};
+
 #include <string>
 #include <iostream>
 #include "recorder_char_general.h"

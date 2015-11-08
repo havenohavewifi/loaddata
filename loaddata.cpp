@@ -5,19 +5,23 @@
 //  Created by IreneWu on 15/11/3.
 //  Copyright (c) 2015年 IreneWu. All rights reserved.
 //
-
+extern "C" {
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "dbHead.h"
+};
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "loaddata.h"
 #include "Buffer.h"
 #include "dbHead.h"
-#include "recorder_customer.h"
 #include "file.h"
 #include "recorder_char_general.h"
 
 using namespace std;
-string src="/Users/irene/Desktop/customer.tbl";
+string src="C:\\Users\\admin\\Desktop\\loaddata\\loaddata\\customer.tbl";
 
 void loaddata(struct dbSysHead * head)
 {
