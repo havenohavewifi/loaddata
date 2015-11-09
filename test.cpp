@@ -8,6 +8,10 @@
 #include "cursor.h"
 #include "getaRecordbyCursor.h"
 #include "b_plus_tree.h"
+#include "insertOneRecord.h"
+#include "recorder_char_general.h"
+#include "indexOpt.h"
+
 
 int init_database(struct dbSysHead *head)
 {
@@ -77,12 +81,13 @@ int main()
     RecordCursor scanTable(&head, 1, rec_length);
     char * one_Row_ = (char *)malloc(sizeof(char)*rec_length);
     while (true == scanTable.getNextRecord(one_Row_)) { //only scan
+		printf("one_Row_:%s\n", one_Row_);
         scanPointer ++;
-        if(scanPointer > 292)
+        if(scanPointer > 30)
             getOneRecord(one_Row_, head.desc.redef[dictID]); //get each attribute value and print
     }
-    showFileDesc(&head);
-	exit_database(&head);
+    //showFileDesc(&head);
+	//exit_database(&head);
 	printf("recordNum:%d\n",head.desc.redef[dictID].recordNum);
 	if(true == createIndexOn(&head, 1, "custkey")){
 		char* index_filename= "b_plus_tree_index_1custkey.dat";
@@ -92,8 +97,34 @@ int main()
 		printf("search(fp,1):%d\n",search(fp,1));
 		printf("search(fp,2):%d\n",search(fp,2));
 		printf("search(fp,50):%d\n",search(fp,50));
+		display(fp);
 		fclose(fp);
 	}
+	
+	relationDefine dic = head.desc.redef[0];
+    int size_per_record = dic.recordLength;
+    char *oneRec = (char *)malloc(sizeof(char)*size_per_record);
+        
+	char * insertTest = (char *)malloc(sizeof(char)* 256);
+    strcpy(insertTest,"501|Customer#000000001|IVhzIApeRb ot,c,E|15|25-989-741-2988|711.56|BUILDING|to the even, regular platelets. regular, ironic epitaphs nag eHHHHHH|");
+    parserOneLineFromFile(insertTest, oneRec, dic);
+    insertOneRecord(&head, 1, oneRec);//插入一条数据，自动更新索引
+	
+	char* index_filename= "b_plus_tree_index_1custkey.dat";
+	FILE* fp = fopen(index_filename,"rb+");
+	int pos = search(fp,501);
+	printf("pos:::%d\n",pos);
+	fclose(fp);
+	
+	free(one_Row_);
+	one_Row_ = (char *)malloc(sizeof(char)*rec_length);
+	rdFile( &head, 1, pos, rec_length,one_Row_);
+	printf("reading from index:\n");
+	getOneRecord(one_Row_, dic);
+	
+	
+    free(insertTest);
+	free(oneRec);
 
 	system("pause");
 	return 0;

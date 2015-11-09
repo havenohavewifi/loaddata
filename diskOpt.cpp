@@ -1,9 +1,10 @@
-
+extern "C" {
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include"dbHead.h"
 
+}
+#include"dbHead.h"
 
 int initTable(struct dbSysHead *head, long fid)
 {

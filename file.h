@@ -19,9 +19,12 @@
 // BitMap‚Äò‚ÅÑ¬•√ä¬•¬¢≈í∆í¬∫Àõ√∑‚Äì¬µ∆í¬µ√ø√∑‚àë
 #define BITMAP_ADDR 1024 
 // ¬†Àù√¶‚Ä∫‚àÇ≈í‚Äò‚ÅÑ¬•√ä¬•¬¢≈í∆í¬∫Àõ√∑‚Äì¬µ∆í¬µ√ø√∑‚àë
-#define DATA_ADDR	(BITMAP_ADDR+SIZE_BIT_MAP)
+
+#define DICTIONARY_ADDR  (BITMAP_ADDR+SIZE_BIT_MAP)
+#define DICTIONARY_SIZE (8*1024)
+#define DATA_ADDR	(DICTIONARY_ADDR+DICTIONARY_SIZE)
 // ‚àÜ‚Ä∞√ÄÀö≈í∆í¬∫Àõ√∑‚Äì√Ä‚àÜ‚à´ƒ±‚àÇ¬∫‚àö¬™‚Äù‚Äì‚â•ÀÜ≈ì√∑¬£¬®‚Äù‚Äì‚Äù‚àö¬¨Ô£ø¬£√∏
-#define SEGMENT_ADDR (BITMAP_ADDR+SIZE_BIT_MAP+SIZE_DATA_SPACE)
+#define SEGMENT_ADDR (DATA_ADDR+SIZE_DATA_SPACE)
 
 
 // √ø∏ˆ∂ŒµƒπÃ∂®“≥√Ê ˝
@@ -88,6 +91,7 @@ struct FileDesc
     long fileID;				//	≈í∆í¬∫Àõ¬µ∆í¬±√ç¬†‚àÇ
     long fileAddr;				//	≈í∆í¬∫Àõ¬µ∆íSegment¬µ√ø√∑‚àë√∑¬µ¬£¬ÆSegment‚Äù‚àö¬°¬•¬±√å¬•√Ü¬°¬®¬£¬©
     long filePageNum;			//	≈í∆í¬∫Àõ‚Äô¬∫‚Äù‚àö‚àÇ‚Ä°‚Ä¶≈∏‚Äú‚â•
+    long filePageEndPos;        //  mark the end position in the final page
 };
 
 struct SysDesc
@@ -107,8 +111,10 @@ struct SysDesc
 
 	long curfid;				//	ƒø«∞ø…“‘∑÷≈‰µƒfid∫≈
 	long curFileNum;			//	ƒø«∞”–∂‡…Ÿ∏ˆŒƒº˛£¨◊Ó∂‡Œ™ MAX_FILE_NUM
+    
 	struct FileDesc fileDesc[MAX_FILE_NUM];			//	∂‘√ø“ª∏ˆŒƒº˛Ω¯––√Ë ˆ
 	struct relationDefine redef[MAX_FILE_NUM];		//  √ø“ª∏ˆ±Ìµƒπÿœµ∂®“Â
+    long dataDictionaryAddr;
 
 };
 

@@ -1,8 +1,10 @@
-
+extern "C"{
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
 #include<string.h>
+}
+
 #include"dbHead.h"
 #include "file.h"
 #include "b_plus_tree.h"
@@ -91,7 +93,7 @@ bool createIndexOn(struct dbSysHead *head, long fid, char* column){
 		//将一个记录对应的elem写入索引文件
 		insert(fp, elem_insert);
 		scanPointer ++;
-        display(fp);
+        //display(fp);
 		printf("\n");
 		if(scanPointer > 30)//暂时只建立30条索引
 			break;
@@ -152,17 +154,15 @@ bool deleteIndex(struct dbSysHead *head, long fid, char* column){
  *
  * @param [in] head  : struct dbSysHead *
  * @param [in] fid : long
- * @param [in] key : int 
- * @param [in] position : int 
+ * @param [in] position : long 
  * @return  bool
  * 
  * @author weiyu
  * @date 2015/11/6
  **/
-bool insertInIndex(struct dbSysHead *head, long fid, int key, int position){
+bool insertInIndex(struct dbSysHead *head, long fid, int position){
 	Element elem_insert;
-	elem_insert.key = key;
-	elem_insert.pos = position;
+
 	FILE *fp;
 	int idx;
 	char* column;
@@ -171,12 +171,20 @@ bool insertInIndex(struct dbSysHead *head, long fid, int key, int position){
 	char fileID[5] = "";
 	sprintf(fileID,"%d",fid);
 	
+	
 	//查询数据字典，获取属性序号
 	idx =  queryFileID(head, fid);
 	if( idx<0 ) {
 		isAvail(NULL,"createIndexOn",ARRAY);
 	}
+	
 	int i;
+	int offset;
+	int key;
+	long rec_length = (long)((head->desc).redef[idx].recordLength);
+    char * one_Row_ = (char *)malloc(sizeof(char)*rec_length);
+	rdFile( head, fid, position, rec_length,one_Row_);
+    
 	for( i = 0; i <= (head->desc).redef[idx].attributeNum; i++) {
 		index_filename = (char *)malloc( 3*NAMELENGTH );
 		*index_filename = '\0';
@@ -190,7 +198,14 @@ bool insertInIndex(struct dbSysHead *head, long fid, int key, int position){
 		if( fp==NULL){	//no index on current column
 			break;
 		}
+		
+		offset = (head->desc).redef[idx].attribute[i].recordDeviation;
+		key = *((int *)(one_Row_ + offset));
+		elem_insert.key = key;
+		elem_insert.pos = position;
 		insert(fp, elem_insert);
+		printf("inserting in %s\n",index_filename);
+		display(fp);
 		fclose(fp);
 		free(index_filename);
 		free(column);
@@ -204,13 +219,13 @@ bool insertInIndex(struct dbSysHead *head, long fid, int key, int position){
  *
  * @param [in] head  : struct dbSysHead *
  * @param [in] fid : long 
- * @param [in] key : int 
+ * @param [in] position : int 
  * @return  bool 
  * 
  * @author weiyu
  * @date 2015/11/6
  **/
-bool deleteInIndex(struct dbSysHead *head, long fid, int key){
+bool deleteInIndex(struct dbSysHead *head, long fid, int position){
 	int idx;
 	char* column;
 	char* index_filename;
@@ -225,13 +240,16 @@ bool deleteInIndex(struct dbSysHead *head, long fid, int key){
 	if( idx<0 ) {
 		isAvail(NULL,"createIndexOn",ARRAY);
 	}
+	
+	
 	int i;
-	//遍历属性，看是否有index
+	int offset;
+	int key;
+	long rec_length = (long)((head->desc).redef[idx].recordLength);
+    char * one_Row_ = (char *)malloc(sizeof(char)*rec_length);
+	rdFile( head, fid, position, rec_length,one_Row_);
+    
 	for( i = 0; i <= (head->desc).redef[idx].attributeNum; i++) {
-		//非int属性上没有index
-		if((head->desc).redef[idx].attribute[i].type != 0)
-			break;
-			
 		index_filename = (char *)malloc( 3*NAMELENGTH );
 		*index_filename = '\0';
 		column = (char *)malloc( NAMELENGTH );
@@ -244,7 +262,12 @@ bool deleteInIndex(struct dbSysHead *head, long fid, int key){
 		if( fp==NULL){	//no index on current column
 			break;
 		}
+		
+		offset = (head->desc).redef[idx].attribute[i].recordDeviation;
+		key = *((int *)(one_Row_ + offset));
 		del(fp, key);
+		printf("deleting in %s\n",index_filename);
+		display(fp);
 		fclose(fp);
 		free(index_filename);
 		free(column);

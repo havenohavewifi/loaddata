@@ -1,8 +1,11 @@
 #ifndef FILEOPT_CPP
 #define FILEOPT_CPP
+extern "C" {
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+
+}
 #include"dbHead.h"
 
 /**

@@ -9,14 +9,14 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "dbHead.h"
+
 };
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "loaddata.h"
-#include "Buffer.h"
 #include "dbHead.h"
+#include "Buffer.h"
 #include "file.h"
 #include "recorder_char_general.h"
 
@@ -62,7 +62,13 @@ void loaddata(struct dbSysHead * head)
         }
         //write remainder
         t.writeBuffer(head, t.data_, t.current_size_);
-//        head->desc.fileDesc[file_id_]
+
+		int fPhysicalID = queryFileID(head, file_id_);
+        head->desc.fileDesc[fPhysicalID].filePageEndPos = t.current_size_;
+        //Attention
+        dic.recordNum = k;
+        
+		
         free(oneRec);
         
 //打印几个字符串检查一下

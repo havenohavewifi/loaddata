@@ -76,9 +76,4 @@ int showBitMap(struct dbSysHead *head, long start, long end);
 //	update.cpp
 int sysUpdate(struct dbSysHead *head);
 
-//indexOpt.cpp
-bool createIndexOn(struct dbSysHead *head, long fid, char* column);
-bool deleteIndex(struct dbSysHead *head, long fid, char* column);
-bool insertInIndex(struct dbSysHead *head, long fid, int key, int position);
-bool deleteInIndex(struct dbSysHead *head, long fid, int key);
 #endif

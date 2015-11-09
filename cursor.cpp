@@ -7,26 +7,24 @@
 //
 
 #include "cursor.h"
-/*
+
 extern "C" {
-    // #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "dbHead.h"
+
 };
-extern "C" {
-    extern int reqPage(struct  dbSysHead *head, long query);
-    extern long mapPage(struct dbSysHead *head, long fid, long num);
-}
-*/
+/**/
+
 #include <iostream>
+#include "dbHead.h"
 
 using namespace std;
 
 
 bool RecordCursor::getNextRecord(void *des) {
     // all the data is read
-    if(this->cLogicPage >= this->filePageNum) {
+    if(this->cLogicPage >= this->filePageNum ||((this->cLogicPage == this->filePageNum - 1) && this->bufferOffset >= head->desc.fileDesc[queryFileID(head, fid)].filePageEndPos)) {
 //        cout<<this->cLogicPage<<"-" <<this->bufferOffset<<endl;
         return false;
     }
